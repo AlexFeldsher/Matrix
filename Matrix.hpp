@@ -222,7 +222,7 @@ private:
 		 */
 		const T& operator++(int i)
 		{
-			T* tmp = _ptr++;
+			const T* tmp = _ptr++;
 			return *tmp;
 		}
 
@@ -241,7 +241,7 @@ private:
 		 */
 		const T& operator--(int i)
 		{
-			T* tmp = _ptr--;
+			const T* tmp = _ptr--;
 			return *tmp;
 		}
 	};
