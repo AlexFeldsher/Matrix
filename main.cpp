@@ -33,7 +33,7 @@ void testCtorRowCol()
 
 	Matrix<int>::iterator b = matrix.begin();
 	Matrix<int>::iterator e = matrix.end();
-	int i;
+	unsigned int i;
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == 0);

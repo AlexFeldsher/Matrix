@@ -73,8 +73,8 @@ public:
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 */
-	Matrix(unsigned int rows, unsigned int cols) : _rows(rows), _cols(cols),
-												   _matrix(std::vector<T>(rows * cols)) {};
+	Matrix(unsigned int rows, unsigned int cols) : _matrix(std::vector<T>(rows * cols)), _cols(cols),
+												   _rows(rows) {};
 
 	/**
 	 * @brief returns the element in the given matrix position
