@@ -68,11 +68,19 @@ public:
 
 
 
+	/**
+	 * @brief Returns the iterator to the first element of the matrix
+	 * @return iterator to the first element of the matrix
+	 */
 	std::iterator begin() const
 	{
-		return _BidiConstIterator(_matrix);
+		return _BidiConstIterator(&_matrix);
 	}
 
+	/**
+	 * @brief Returns the iterator to the element following the last element of the matrix
+	 * @return iterator to the element following the last element of the matrix
+	 */
 	std::iterator end() const
 	{
 		return _BidiConstIterator((&_matrix) + (_cols * _rows));
