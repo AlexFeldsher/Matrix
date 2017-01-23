@@ -13,6 +13,11 @@ bool testDefaultCtor()
 
 	assert(matrix(0, 0) == DEFAULT_CTOR_ELEM);
 	std::cout << "element (0,0) == 0" << std::endl;
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	std::cout << "Iterator first element: " << *b << std::endl;
+	++b;
+	std::cout << "That was the last element: " << (b == e) << std::endl;
 	return true;
 }
 

@@ -36,6 +36,11 @@ template<class T>
 class Matrix
 {
 	/**
+	 * @brief bidirectional iterator class declaration
+	 */
+	class _BidiConstIterator;
+
+	/**
 	 * @brief vector of type T, represents a matrix.
 	 */
 	std::vector<T> _matrix;
@@ -52,6 +57,8 @@ class Matrix
 
 public:
 
+	typedef _BidiConstIterator iterator;
+
 	/**
 	 * @brief default constructor
 	 * initializes a matrix of size 1x1 with a single element 0
@@ -66,24 +73,22 @@ public:
 	 */
 	const T& operator()(unsigned int row, unsigned int col) const;
 
-
-
 	/**
 	 * @brief Returns the iterator to the first element of the matrix
 	 * @return iterator to the first element of the matrix
 	 */
-	std::iterator begin() const
+	iterator begin() const
 	{
-		return _BidiConstIterator(&_matrix);
+		return iterator(&(_matrix.front()));
 	}
 
 	/**
 	 * @brief Returns the iterator to the element following the last element of the matrix
 	 * @return iterator to the element following the last element of the matrix
 	 */
-	std::iterator end() const
+	iterator end() const
 	{
-		return _BidiConstIterator((&_matrix) + (_cols * _rows));
+		return iterator(&(_matrix.back()) + (_cols * _rows));
 	}
 
 	/**
@@ -123,13 +128,13 @@ private:
 	 */
 	class _BidiConstIterator : public std::iterator<std::bidirectional_iterator_tag, T, std::ptrdiff_t, T*, T&>
 	{
-		T* _ptr;
+		const T* _ptr;
 	public:
 		/**
 		 * @brief Bidirectional iterator constructor
 		 * @param ptr the element the iterator should point to
 		 */
-		_BidiConstIterator(T* ptr) : _ptr(ptr) {};
+		_BidiConstIterator(const T* ptr) : _ptr(ptr) {};
 
 		/**
 		 * @brief Iterator constructor
