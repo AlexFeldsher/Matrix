@@ -22,10 +22,35 @@ void testDefaultCtor()
 
 void testCtorRowCol()
 {
-	std::cout << "========DEFAULT CTOR TEST========" << std::endl;
+	std::cout << "========ROW COL CTOR TEST========" << std::endl;
 	unsigned int rows = 1332;
 	unsigned int cols = 3234;
 	Matrix<int> matrix(rows, cols);
+	assert(matrix.cols() == cols);
+	std::cout << "Correct column number" << std::endl;
+	assert(matrix.rows() == rows);
+	std::cout << "Correct row number" << std::endl;
+
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	unsigned int i;
+	for (i = 0; b != e; ++b, ++i)
+	{
+		assert(*b == 0);
+	}
+	std::cout << "All the elements initialized to 0" << std::endl;
+	assert(i == rows*cols);
+	std::cout << "The right number of elements" << std::endl;
+}
+
+void testCopyCtor()
+{
+	std::cout << "========COPY CTOR========" << std::endl;
+	unsigned int rows = 1332;
+	unsigned int cols = 3234;
+	Matrix<int> matrix1(rows, cols);
+	Matrix<int> matrix = matrix1;
+
 	assert(matrix.cols() == cols);
 	std::cout << "Correct column number" << std::endl;
 	assert(matrix.rows() == rows);
@@ -63,6 +88,7 @@ void testFunctorException()
 
 int main() {
 	testDefaultCtor();
+	testCtorRowCol();
 	testCtorRowCol();
 	testFunctorException();
 	return 0;

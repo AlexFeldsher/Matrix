@@ -69,12 +69,18 @@ public:
 	Matrix();
 
 	/**
-	 * Matrix constructor, creates a matrix with the given row and column sizes initialized to zeroes
+	 * @brief Matrix constructor, creates a matrix with the given row and column sizes initialized to zeroes
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 */
 	Matrix(unsigned int rows, unsigned int cols) : _matrix(std::vector<T>(rows * cols)), _cols(cols),
 												   _rows(rows) {};
+
+	/**
+	 * @brief Matrix copy constructor
+	 * @param other the matrix to copy
+	 */
+	Matrix(const Matrix<T>& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
 
 	/**
 	 * @brief returns the element in the given matrix position
