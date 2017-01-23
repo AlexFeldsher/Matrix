@@ -89,6 +89,15 @@ public:
 	Matrix(const Matrix<T>&& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
 
 	/**
+	 * @brief Constructs a matrix from a given vector and row and column numbers
+	 * @param rows number of rows
+	 * @param cols number of columns
+	 * @param cells the element to populate the matrix with
+	 */
+	Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& cells) : _matrix(cells), _cols(cols),
+																				_rows(rows) {};
+
+	/**
 	 * @brief returns the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
