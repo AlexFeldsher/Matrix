@@ -93,9 +93,15 @@ public:
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 * @param cells the element to populate the matrix with
+	 * TODO: maybe throw exception if the values don't add up
 	 */
 	Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& cells) : _matrix(cells), _cols(cols),
 																				_rows(rows) {};
+
+	/**
+	 * @brief Matrix destructor
+	 */
+	~Matrix() {};
 
 	/**
 	 * @brief returns the element in the given matrix position
