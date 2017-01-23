@@ -104,6 +104,13 @@ public:
 	~Matrix() {};
 
 	/**
+	 * @brief Assigns the content of the given matrix
+	 * @param rhs matrix whose values to assign
+	 * @return *this
+	 */
+	Matrix<T>& operator=(const Matrix<T>& rhs);
+
+	/**
 	 * @brief returns the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
@@ -284,6 +291,21 @@ Matrix<T>::Matrix() : _cols(DEFAULT_CTOR_COLS), _rows(DEFAULT_CTOR_ROWS)
 	/* initialize a new vector with a single element 0 */
 	std::vector<T> zero(_cols, DEFAULT_CTOR_ELEM);
 	_matrix = zero;
+}
+
+/**
+ * @brief Assigns the content of the given matrix
+ * @param rhs matrix whose values to assign
+ * @return *this
+ */
+template <typename T>
+Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
+{
+	_matrix = rhs._matrix;
+	_cols = rhs._cols;
+	_rows = rhs._rows;
+
+	return *this;
 }
 
 /**
