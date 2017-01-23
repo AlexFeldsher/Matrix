@@ -57,6 +57,9 @@ class Matrix
 
 public:
 
+	/**
+	 * @brief iterator type definition
+	 */
 	typedef _BidiConstIterator iterator;
 
 	/**
@@ -64,6 +67,14 @@ public:
 	 * initializes a matrix of size 1x1 with a single element 0
 	 */
 	Matrix();
+
+	/**
+	 * Matrix constructor, creates a matrix with the given row and column sizes initialized to zeroes
+	 * @param rows number of rows
+	 * @param cols number of columns
+	 */
+	Matrix(unsigned int rows, unsigned int cols) : _rows(rows), _cols(cols),
+												   _matrix(std::vector<T>(rows * cols)) {};
 
 	/**
 	 * @brief returns the element in the given matrix position
@@ -88,7 +99,7 @@ public:
 	 */
 	iterator end() const
 	{
-		return iterator(&(_matrix.back()) + (_cols * _rows));
+		return iterator(&(_matrix.back()) + 1);
 	}
 
 	/**

@@ -2,9 +2,9 @@
 #include "Matrix.hpp"
 #include "assert.h"
 
-bool testDefaultCtor()
+void testDefaultCtor()
 {
-	std::cout << "DEFAULT CTOR TEST:" << std::endl;
+	std::cout << "========DEFAULT CTOR TEST========" << std::endl;
 	Matrix<int> matrix;
 	assert(matrix.cols() == DEFAULT_CTOR_COLS);
 	std::cout << "Num of columns == 1" << std::endl;
@@ -18,12 +18,34 @@ bool testDefaultCtor()
 	std::cout << "Iterator first element: " << *b << std::endl;
 	++b;
 	std::cout << "That was the last element: " << (b == e) << std::endl;
-	return true;
 }
 
-bool testFunctorException()
+void testCtorRowCol()
 {
-	std::cout << "FUNCTOR THROW EXCEPTION TEST:" << std::endl;
+	std::cout << "========DEFAULT CTOR TEST========" << std::endl;
+	unsigned int rows = 1332;
+	unsigned int cols = 3234;
+	Matrix<int> matrix(rows, cols);
+	assert(matrix.cols() == cols);
+	std::cout << "Correct column number" << std::endl;
+	assert(matrix.rows() == rows);
+	std::cout << "Correct row number" << std::endl;
+
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	int i;
+	for (i = 0; b != e; ++b, ++i)
+	{
+		assert(*b == 0);
+	}
+	std::cout << "All the elements initialized to 0" << std::endl;
+	assert(i == rows*cols);
+	std::cout << "The right number of elements" << std::endl;
+}
+
+void testFunctorException()
+{
+	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
 	Matrix<int> matrix;
 	try
 	{
@@ -35,22 +57,13 @@ bool testFunctorException()
 		std::string msg = OUT_OF_RANGE_MSG;
 		assert(msg == e.what());
 		std::cout << "Exception msg is correct." << std::endl;
-		return true;
 	}
 
-	return false;
 }
 
 int main() {
-	if (!testDefaultCtor())
-	{
-		std::cout << "FAILED TEST DEFAULT CTOR\n";
-	}
-	if (!testFunctorException())
-	{
-		std::cout << "FAILED TEST FUNCTOR EXCEPTION\n";
-	}
-
-	std::cout << "DONE TESTING." << std::endl;
+	testDefaultCtor();
+	testCtorRowCol();
+	testFunctorException();
 	return 0;
 }
