@@ -83,6 +83,12 @@ public:
 	Matrix(const Matrix<T>& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
 
 	/**
+	 * @brief Matrix move constructor
+	 * @param other the matrix to copy
+	 */
+	Matrix(const Matrix<T>&& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
+
+	/**
 	 * @brief returns the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
