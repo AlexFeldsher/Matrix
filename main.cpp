@@ -268,6 +268,19 @@ void testIsSquareMatrix()
 	std::cout << "IsSquareMatrix test passed" << std::endl;
 }
 
+void testStreamOp()
+{
+	std::cout << "========STREAM OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 100; ++i)
+	{
+		vec.push_back(i);
+	}
+	Matrix<int> matrix1(10, 10, vec);
+	std::cout << matrix1 << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -299,6 +312,7 @@ int main() {
 	testNotEQOp();
 	testTrans();
 	testIsSquareMatrix();
+	testStreamOp();
 	testFunctorException();
 	return 0;
 }

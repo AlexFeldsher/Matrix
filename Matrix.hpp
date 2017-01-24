@@ -31,6 +31,16 @@
  * @brief the minimum matrix row and column index
  */
 #define MIN_MATRIX_INDEX 0
+/**
+ * @def TAB_CHAR '\t'
+ * @brief Tab character
+ */
+#define TAB_CHAR '\t'
+/**
+ * @def NEWLINE_CHAR '\n'
+ * @brief new line character
+ */
+#define NEWLINE_CHAR '\n';
 
 template <class T>
 class Matrix
@@ -159,6 +169,15 @@ public:
 	{
 		return (_cols == _rows);
 	}
+
+	/**
+	 * @brief output operator
+	 * @param os output stream
+	 * @param matrix the matrix to output
+	 * @return output stream
+	 */
+	template <typename P>
+	friend std::ostream& operator<<(std::ostream& os, const Matrix<P>& matrix);
 
 	/**
 	 * @brief returns a constant of the element in the given matrix position
@@ -395,7 +414,28 @@ Matrix<T> Matrix<T>::trans() const
 
 	return transMatrix;
 }
-
+/**
+ * @brief output operator
+ * outputs each matrix element seperated by a tab and every row seperated by a new line
+ * @param os output stream
+ * @param matrix the matrix to output
+ * @return output stream
+ */
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
+{
+	unsigned int i, j;
+	/** iterate over matrix elements */
+	for (i = 0; i < matrix.rows(); ++i)
+	{
+		for (j = 0; j < matrix.cols(); ++j)
+		{
+			os << matrix(i, j) << TAB_CHAR;
+		}
+		os << NEWLINE_CHAR;
+	}
+	return os;
+}
 
 /**
  * @brief returns the element in the given matrix position
