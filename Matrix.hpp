@@ -5,6 +5,7 @@
 #include <iterator>
 #include <vector>
 #include <stdexcept>	// std::out_of_range
+#include "Complex.h"
 
 /**
  * @def DEFAULT_CTOR_ROWS 1
@@ -26,6 +27,36 @@
  * @brief the message to input to the out of range exception
  */
 #define OUT_OF_RANGE_MSG "Requested element (col, row) are out of the matrix range."
+/**
+ * @def ROWS_COLS_CTOR_EXCEPTION_MSG "the given matrix dimensions are invalid."
+ * @brief the message to add to a invalid row and column arguments exception
+ */
+#define ROWS_COLS_CTOR_EXCEPTION_MSG "the given matrix dimensions are invalid."
+/**
+ * @def CELLS_CTOR_EXCEPTION_MSG "the given matrix dimensions don't fit the given vector size."
+ * @brief the message to add to a matrix vector constructor exception
+ */
+#define CELLS_CTOR_EXCEPTION_MSG "the given matrix dimensions don't fit the given vector size."
+/**
+ * @def ADDITION_EXCEPTION_MSG "cannot addition matrices of different sizes."
+ * @brief the message to add to an addition exception
+ */
+#define ADDITION_EXCEPTION_MSG "cannot addition matrices of different sizes."
+/**
+ * @def SUBTRACTION_EXCEPTION_MSG "cannot subtract matrices of different sizes."
+ * @brief the message to add to a subtraction exception
+ */
+#define SUBTRACTION_EXCEPTION_MSG "cannot subtract matrices of different sizes."
+/**
+ * @def TRANSPOSE_EXCEPTION_MSG "cannot transpose non square matrix."
+ * @brief the message to add to a transpose exception
+ */
+#define TRANSPOSE_EXCEPTION_MSG "cannot transpose non square matrix."
+/**
+ * @def MULTIPLICATION_EXCEPTION_MSG "cannot multiply with the given matrix row dimension."
+ * @brief the message to add to a multiplication exception
+ */
+#define MULTIPLICATION_EXCEPTION_MSG "cannot multiply with the given matrix row dimension."
 /**
  * @def MIN_MATRIX_INDEX 0
  * @brief the minimum matrix row and column index
@@ -83,8 +114,7 @@ public:
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 */
-	Matrix(unsigned int rows, unsigned int cols) : _matrix(std::vector<T>(rows * cols)), _cols(cols),
-												   _rows(rows) {};
+	Matrix(unsigned int rows, unsigned int cols);
 
 	/**
 	 * @brief Matrix copy constructor
@@ -103,10 +133,8 @@ public:
 	 * @param rows number of rows
 	 * @param cols number of columns
 	 * @param cells the element to populate the matrix with
-	 * TODO: maybe throw exception if the values don't add up
 	 */
-	Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& cells) : _matrix(cells), _cols(cols),
-																				_rows(rows) {};
+	Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& cells);
 
 	/**
 	 * @brief Matrix destructor
@@ -225,12 +253,6 @@ public:
 	 */
 	unsigned int rows() const;
 
-	/**
-	 * FOR TESTING
-	 * TODO: remove before submition
-	 */
-	std::vector<std::vector<T>> getMatrix() {return _matrix;};
-
 private:
 
 	/**
@@ -259,6 +281,44 @@ Matrix<T>::Matrix() : _cols(DEFAULT_CTOR_COLS), _rows(DEFAULT_CTOR_ROWS)
 	std::vector<T> zero(_cols, DEFAULT_CTOR_ELEM);
 	_matrix = zero;
 }
+/**
+ * @brief Matrix constructor, creates a matrix with the given row and column sizes initialized to zeroes
+ * @param rows number of rows
+ * @param cols number of columns
+ */
+template <typename T>
+Matrix<T>::Matrix(unsigned int rows, unsigned int cols)
+{
+	if (rows < 0 || cols < 0)
+	{
+		throw std::invalid_argument(ROWS_COLS_CTOR_EXCEPTION_MSG);
+	}
+	_rows = rows;
+	_cols = cols;
+
+	std::vector<T> vec(rows * cols);
+	_matrix = vec;
+}
+
+/**
+ * @brief Constructs a matrix from a given vector and row and column numbers
+ * @param rows number of rows
+ * @param cols number of columns
+ * @param cells the element to populate the matrix with
+ */
+template <typename T>
+Matrix<T>::Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& cells)
+{
+	// throw exception if given vector size doesn't fit the matrix
+	if (cells.size() != (rows * cols) || rows < 0 || cols < 0)
+	{
+		throw std::invalid_argument(CELLS_CTOR_EXCEPTION_MSG);
+	}
+	_cols = cols;
+	_rows = rows;
+	_matrix = cells;
+}
+
 
 /**
  * @brief Assigns the content of the given matrix
@@ -283,12 +343,17 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
 template <typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) const
 {
-	// TODO: add size comparison and throw and exception
+	// throw an exception if matrices dimensions differ
+	if (rows() != rhs.rows() || cols() != rhs.cols())
+	{
+		throw std::invalid_argument(ADDITION_EXCEPTION_MSG);
+	}
+
 	Matrix<T>::const_iterator rhsBegin = rhs.begin();
 	Matrix<T>::const_iterator rhsEnd = rhs.end();
 	Matrix<T>::const_iterator thisBegin = begin();
 
-	std::vector<T> newMatrixVec(_cols * _rows);
+	std::vector<T> newMatrixVec(cols() * rows());
 
 	int i;
 	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
@@ -308,8 +373,11 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) const
 template <typename T>
 Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 {
-	// TODO: add size comparison and throw and exception
-	// TODO: maybe make a single function for addition and subtraction
+	// throw an exception if matrices dimensions differ
+	if (cols() != rhs.rows() || cols() != rhs.cols())
+	{
+		throw std::invalid_argument(SUBTRACTION_EXCEPTION_MSG);
+	}
 	const_iterator rhsBegin = rhs.begin();
 	const_iterator rhsEnd = rhs.end();
 	const_iterator thisBegin = begin();
@@ -336,8 +404,10 @@ template <typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) const
 {
 	Matrix<T> result(_rows, rhs._cols);
-	// TODO: add matrix size verification
-	// this nxm, rhs mxp
+	if (cols() != rhs.rows())
+	{
+		throw std::invalid_argument(MULTIPLICATION_EXCEPTION_MSG);
+	}
 	unsigned int i, j, k;
 	for (i = 0; i < _rows; ++i)
 	{
@@ -400,7 +470,11 @@ bool Matrix<T>::operator!=(const Matrix<T>& rhs) const
 template <typename T>
 Matrix<T> Matrix<T>::trans() const
 {
-	//TODO: throw exception if matrix isn't square
+	if (cols() != rows())
+	{
+		throw std::logic_error(TRANSPOSE_EXCEPTION_MSG);
+	}
+
 	unsigned int i, j;
 	Matrix<T> transMatrix(_rows, _cols);
 
@@ -414,6 +488,34 @@ Matrix<T> Matrix<T>::trans() const
 
 	return transMatrix;
 }
+
+/**
+ * @brief specialized transpose method for matrices over the complex field
+ * Conjugate transpose
+ * @return the transposed matrix
+ */
+template <>
+Matrix<Complex> Matrix<Complex>::trans() const
+{
+	if (cols() != rows())
+	{
+		throw std::logic_error(TRANSPOSE_EXCEPTION_MSG);
+	}
+
+	unsigned int i, j;
+	Matrix<Complex> transMatrix(_rows, _cols);
+
+	for (i = 0; i < _rows; ++i)
+	{
+		for (j = 0; j < _cols; ++j)
+		{
+			transMatrix(j, i) = _matrix[_getIndex(i, j)].conj();
+		}
+	}
+
+	return transMatrix;
+}
+
 /**
  * @brief output operator
  * outputs each matrix element seperated by a tab and every row seperated by a new line

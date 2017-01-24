@@ -1,9 +1,10 @@
 from subprocess import Popen, PIPE, STDOUT, TimeoutExpired
 from random import randint, uniform
+import sys
 
 MAX_DIM = 10
-MIN_INT = -100
-MAX_INT = 100
+MIN_INT = -10
+MAX_INT = 10
 ENCODING = 'ASCII'
 DRIVER_EXE = 'test.out'
 SCHOOL_EXE = 'GenericMatrixDriver'
@@ -21,6 +22,7 @@ def main():
         my_output = my_output.decode(ENCODING)
         if (my_output == school_output):
             print('.', end='')
+            sys.stdout.flush()
         else:
             run = False
             print("============= INPUT=============")
@@ -32,7 +34,7 @@ def main():
             print("============= MY =============")
             print(my_output)
             print("================================")
-            
+
 
 def generateInput():
     field = randint(1,3)
@@ -50,20 +52,20 @@ def generateInput():
 
 def additionInput(field, matricesSize):
     if field == 1:
-        matrix1 = generateIntMatrix(matricesSize)
-        matrix2 = generateIntMatrix(matricesSize)
+        matrix1 = generateIntMatrix(matricesSize[0])
+        matrix2 = generateIntMatrix(matricesSize[1])
     elif field == 2:
-        matrix1 = generateDoubleMatrix(matricesSize)
-        matrix2 = generateDoubleMatrix(matricesSize)
+        matrix1 = generateDoubleMatrix(matricesSize[0])
+        matrix2 = generateDoubleMatrix(matricesSize[1])
     elif field == 3:
-        matrix1 = generateComplexMatrix(matricesSize)
-        matrix2 = generateComplexMatrix(matricesSize)
+        matrix1 = generateComplexMatrix(matricesSize[0])
+        matrix2 = generateComplexMatrix(matricesSize[1])
     inp = str(field) + '\n1\n'
-    inp += str(matricesSize[0]) + '\n'
-    inp += str(matricesSize[1]) + '\n'
+    inp += str(matricesSize[0][0]) + '\n'
+    inp += str(matricesSize[0][1]) + '\n'
     inp += matrix1
-    inp += str(matricesSize[0]) + '\n'
-    inp += str(matricesSize[1]) + '\n'
+    inp += str(matricesSize[1][0]) + '\n'
+    inp += str(matricesSize[1][1]) + '\n'
     inp += matrix2
     return inp
 
@@ -93,7 +95,6 @@ def transInput(field, matrixSize):
         matrix = generateDoubleMatrix(matrixSize)
     elif field == 3:
         matrix = generateComplexMatrix(matrixSize)
-    matrix = generateIntMatrix(matrixSize)
     inp = str(field) + '\n3\n'
     inp += str(matrixSize[0]) + '\n'
     inp += str(matrixSize[1]) + '\n'
@@ -120,7 +121,11 @@ def generateComplexMatrix(matrixSize):
     string = ""
     for i in range(matrixSize[0]):
         for j in range(matrixSize[1]):
-            string += str(round(uniform(MIN_INT, MAX_INT), 2)) + '+' + str(round(uniform(MIN_INT, MAX_INT), 2)) + 'i,'
+            if (randint(0,1) == 1):
+                sign = '+'
+            else:
+                sign = '-'
+            string += str(round(uniform(MIN_INT, MAX_INT), 2)) + sign + str(round(uniform(MIN_INT, MAX_INT), 2)) + 'i,'
         string += '\n'
     return string
 
@@ -128,14 +133,18 @@ def getMatricesSize(operation):
     if operation == 1:
         N = randint(1,MAX_DIM)
         M = randint(1,MAX_DIM)
-        return (N, M)
+        I = randint(1,MAX_DIM)
+        J = randint(1,MAX_DIM)
+        return ((N, M),(I,J))
     if operation == 2:
         N = randint(1,MAX_DIM)
         M = randint(1,MAX_DIM)
+        I = randint(1,MAX_DIM)
         K = randint(1,MAX_DIM)
-        return ((N, M), (M, K))
+        return ((N, M), (I, K))
     if operation == 3:
         N = randint(1,MAX_DIM)
+        M = randint(1,MAX_DIM)
         return (N, N)
 
 main()

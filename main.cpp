@@ -103,7 +103,8 @@ void testVectorCtor()
 		vec.push_back(i);
 	}
 
-	Matrix<int> matrix(100, 100, vec);
+	Matrix<int> matrix(10, 100, vec);
+	std::cout << "GOT HERE\n";
 	Matrix<int>::const_iterator b = matrix.begin();
 	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
@@ -123,7 +124,7 @@ void testAssignOp()
 		vec.push_back(i);
 	}
 
-	Matrix<int>* matrix1 = new Matrix<int>(100, 100, vec);
+	Matrix<int>* matrix1 = new Matrix<int>(10, 100, vec);
 	Matrix<int> matrix;
 	matrix = *matrix1;
 	delete matrix1;
@@ -219,8 +220,8 @@ void testEQOp()
 		vec.push_back(1);
 	}
 
-	Matrix<int> matrix1(100, 100, vec);
-	Matrix<int> matrix2(100, 100, vec);
+	Matrix<int> matrix1(100, 10, vec);
+	Matrix<int> matrix2(100, 10, vec);
 	assert((matrix1 == matrix2) == true);
 	matrix2(1,1) = 3;
 	assert((matrix1 == matrix2) == false);
@@ -237,8 +238,8 @@ void testNotEQOp()
 		vec.push_back(1);
 	}
 
-	Matrix<int> matrix1(100, 100, vec);
-	Matrix<int> matrix2(100, 100, vec);
+	Matrix<int> matrix1(10, 100, vec);
+	Matrix<int> matrix2(10, 100, vec);
 	assert((matrix1 != matrix2) == false);
 	matrix2(1,1) = 3;
 	assert((matrix2 != matrix1) == true);
@@ -298,12 +299,19 @@ void testFunctorException()
 	}
 }
 
+void testZeroSizeMatrix()
+{
+	std::cout << "========ZERO SIZE MATRIX TEST========" << std::endl;
+	Matrix<int> matrix(0, 0);
+	std::cout << "Zero size matrix initialized, test passed." << std::endl;
+}
+
 int main() {
+	testVectorCtor();
 	testDefaultCtor();
 	testCtorRowCol();
 	testCopyCtor();
 	testMoveCtor();
-	testVectorCtor();
 	testAssignOp();
 	testAddOp();
 	testSubOp();
@@ -313,6 +321,7 @@ int main() {
 	testTrans();
 	testIsSquareMatrix();
 	testStreamOp();
+	testZeroSizeMatrix();
 	testFunctorException();
 	return 0;
 }
