@@ -13,8 +13,8 @@ void testDefaultCtor()
 
 	assert(matrix(0, 0) == DEFAULT_CTOR_ELEM);
 	std::cout << "element (0,0) == 0" << std::endl;
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	std::cout << "Iterator first element: " << *b << std::endl;
 	++b;
 	std::cout << "That was the last element: " << (b == e) << std::endl;
@@ -31,8 +31,8 @@ void testCtorRowCol()
 	assert(matrix.rows() == rows);
 	std::cout << "Correct row number" << std::endl;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	unsigned int i;
 	for (i = 0; b != e; ++b, ++i)
 	{
@@ -56,8 +56,8 @@ void testCopyCtor()
 	assert(matrix.rows() == rows);
 	std::cout << "Correct row number" << std::endl;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	unsigned int i;
 	for (i = 0; b != e; ++b, ++i)
 	{
@@ -81,8 +81,8 @@ void testMoveCtor()
 	assert(matrix.rows() == rows);
 	std::cout << "Correct row number" << std::endl;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	unsigned int i;
 	for (i = 0; b != e; ++b, ++i)
 	{
@@ -104,8 +104,8 @@ void testVectorCtor()
 	}
 
 	Matrix<int> matrix(100, 100, vec);
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == vec[i]);
@@ -128,8 +128,8 @@ void testAssignOp()
 	matrix = *matrix1;
 	delete matrix1;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == vec[i]);
@@ -152,8 +152,8 @@ void testAddOp()
 	Matrix<int> matrix;
 	matrix = matrix1 + matrix2;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == (vec[i] * 2));
@@ -176,8 +176,8 @@ void testSubOp()
 	Matrix<int> matrix;
 	matrix = matrix1 - matrix2;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == 0);
@@ -200,8 +200,8 @@ void testMultOp()
 	Matrix<int> matrix;
 	matrix = matrix1 * matrix2;
 
-	Matrix<int>::iterator b = matrix.begin();
-	Matrix<int>::iterator e = matrix.end();
+	Matrix<int>::const_iterator b = matrix.begin();
+	Matrix<int>::const_iterator e = matrix.end();
 	for (i = 0; b != e; ++b, ++i)
 	{
 		assert(*b == 100);

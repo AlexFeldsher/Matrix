@@ -70,7 +70,7 @@ public:
 	/**
 	 * @brief iterator type definition
 	 */
-	typedef _BidiConstIterator iterator;
+	typedef _BidiConstIterator const_iterator;
 
 	/**
 	 * @brief default constructor
@@ -199,18 +199,18 @@ public:
 	 * @brief Returns the iterator to the first element of the matrix
 	 * @return iterator to the first element of the matrix
 	 */
-	iterator begin() const
+	const_iterator begin() const
 	{
-		return iterator(&(_matrix.front()));
+		return const_iterator(&(_matrix.front()));
 	}
 
 	/**
 	 * @brief Returns the iterator to the element following the last element of the matrix
 	 * @return iterator to the element following the last element of the matrix
 	 */
-	iterator end() const
+	const_iterator end() const
 	{
-		return iterator(&(_matrix.back()) + 1);
+		return const_iterator(&(_matrix.back()) + 1);
 	}
 
 	/**
@@ -284,9 +284,9 @@ template <typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) const
 {
 	// TODO: add size comparison and throw and exception
-	Matrix<T>::iterator rhsBegin = rhs.begin();
-	Matrix<T>::iterator rhsEnd = rhs.end();
-	Matrix<T>::iterator thisBegin = begin();
+	Matrix<T>::const_iterator rhsBegin = rhs.begin();
+	Matrix<T>::const_iterator rhsEnd = rhs.end();
+	Matrix<T>::const_iterator thisBegin = begin();
 
 	std::vector<T> newMatrixVec(_cols * _rows);
 
@@ -310,9 +310,9 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 {
 	// TODO: add size comparison and throw and exception
 	// TODO: maybe make a single function for addition and subtraction
-	iterator rhsBegin = rhs.begin();
-	iterator rhsEnd = rhs.end();
-	iterator thisBegin = begin();
+	const_iterator rhsBegin = rhs.begin();
+	const_iterator rhsEnd = rhs.end();
+	const_iterator thisBegin = begin();
 
 	std::vector<T> newMatrixVec(_cols * _rows);
 
@@ -367,9 +367,9 @@ bool Matrix<T>::operator==(const Matrix<T>& rhs) const
 		return false;
 	}
 
-	iterator thisBegin = this->begin();
-	iterator thisEnd = this->end();
-	iterator rhsBegin = rhs.begin();
+	const_iterator thisBegin = this->begin();
+	const_iterator thisEnd = this->end();
+	const_iterator rhsBegin = rhs.begin();
 
 	for (; thisBegin != thisEnd; ++thisBegin, ++rhsBegin)
 	{
@@ -509,6 +509,12 @@ class Matrix<T>::_BidiConstIterator : public std::iterator<std::bidirectional_it
 	const T* _ptr;
 
 public:
+
+	/**
+	 * @brief default constructor
+	 * initialized the pointer to nullptr
+	 */
+	_BidiConstIterator() : _ptr(nullptr) {};
 	/**
 	 * @brief Bidirectional iterator constructor
 	 * @param ptr the element the iterator should point to
