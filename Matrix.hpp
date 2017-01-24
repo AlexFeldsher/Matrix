@@ -152,6 +152,15 @@ public:
 	Matrix<T> trans() const;
 
 	/**
+	 * @brief returns true if the matrix is square, otherwise false
+	 * @return true if the matrix is square, otherwise false
+	 */
+	bool isSquareMatrix() const
+	{
+		return (_cols == _rows);
+	}
+
+	/**
 	 * @brief returns a constant of the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
@@ -166,7 +175,6 @@ public:
 	 * @return the element in the given row and column number
 	 */
 	T& operator()(unsigned int row, unsigned int col);
-
 
 	/**
 	 * @brief Returns the iterator to the first element of the matrix
