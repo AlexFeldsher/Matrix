@@ -209,6 +209,42 @@ void testMultOp()
 	std::cout << "Multiplication test passed" << std::endl;
 }
 
+void testEQOp()
+{
+	std::cout << "========EQUAL OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 1000; ++i)
+	{
+		vec.push_back(1);
+	}
+
+	Matrix<int> matrix1(100, 100, vec);
+	Matrix<int> matrix2(100, 100, vec);
+	assert((matrix1 == matrix2) == true);
+	matrix2(1,1) = 3;
+	assert((matrix1 == matrix2) == false);
+	std::cout << "Equal test passed" << std::endl;
+}
+
+void testNotEQOp()
+{
+	std::cout << "========NOT EQUAL OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 1000; ++i)
+	{
+		vec.push_back(1);
+	}
+
+	Matrix<int> matrix1(100, 100, vec);
+	Matrix<int> matrix2(100, 100, vec);
+	assert((matrix1 != matrix2) == false);
+	matrix2(1,1) = 3;
+	assert((matrix2 != matrix1) == true);
+	std::cout << "Not equal test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -224,7 +260,6 @@ void testFunctorException()
 		assert(msg == e.what());
 		std::cout << "Exception msg is correct." << std::endl;
 	}
-
 }
 
 int main() {
@@ -237,6 +272,8 @@ int main() {
 	testAddOp();
 	testSubOp();
 	testMultOp();
+	testEQOp();
+	testNotEQOp();
 	testFunctorException();
 	return 0;
 }

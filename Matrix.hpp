@@ -132,6 +132,20 @@ public:
 	Matrix<T> operator*(const Matrix<T>& rhs) const;
 
 	/**
+	 * @brief compare the contents of this matrix with the given matrix
+	 * @param rhs the matrix to compare its content to this matrix
+	 * @return true if all the elements are equal, otherwise false
+	 */
+	bool operator==(const Matrix<T>& rhs) const;
+
+	/**
+	 * @brief compare the contents of this matrix with the given matrix
+	 * @param rhs the matrix to compare its content to this matrix
+	 * @return false if all the elements are equal, otherwise true
+	 */
+	bool operator!=(const Matrix<T>& rhs) const;
+
+	/**
 	 * @brief returns a constant of the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
@@ -263,9 +277,9 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 {
 	// TODO: add size comparison and throw and exception
 	// TODO: maybe make a single function for addition and subtraction
-	Matrix<T>::iterator rhsBegin = rhs.begin();
-	Matrix<T>::iterator rhsEnd = rhs.end();
-	Matrix<T>::iterator thisBegin = begin();
+	iterator rhsBegin = rhs.begin();
+	iterator rhsEnd = rhs.end();
+	iterator thisBegin = begin();
 
 	std::vector<T> newMatrixVec(_cols * _rows);
 
@@ -306,6 +320,46 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) const
 	}
 	return result;
 }
+
+/**
+ * @brief compare the contents of this matrix with the given matrix
+ * @param rhs the matrix to compare its content to this matrix
+ * @return true if all the elements are equal, otherwise false
+ */
+template <typename T>
+bool Matrix<T>::operator==(const Matrix<T>& rhs) const
+{
+	if (_cols != rhs._cols || _rows != rhs._rows)
+	{
+		return false;
+	}
+
+	iterator thisBegin = this->begin();
+	iterator thisEnd = this->end();
+	iterator rhsBegin = rhs.begin();
+
+	for (; thisBegin != thisEnd; ++thisBegin, ++rhsBegin)
+	{
+		if (*thisBegin != *rhsBegin)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * @brief compare the contents of this matrix with the given matrix
+ * @param rhs the matrix to compare its content to this matrix
+ * @return false if all the elements are equal, otherwise true
+ */
+template <typename T>
+bool Matrix<T>::operator!=(const Matrix<T>& rhs) const
+{
+	return !(*this == rhs);
+}
+
 
 /**
  * @brief returns the element in the given matrix position
