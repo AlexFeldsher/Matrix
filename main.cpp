@@ -161,6 +161,30 @@ void testAddOp()
 	std::cout << "Addition test passed" << std::endl;
 }
 
+void testSubOp()
+{
+	std::cout << "========SUBTRACTION OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 10000; ++i)
+	{
+		vec.push_back(i);
+	}
+
+	Matrix<int> matrix1(100, 100, vec);
+	Matrix<int> matrix2(100, 100, vec);
+	Matrix<int> matrix;
+	matrix = matrix1 - matrix2;
+
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	for (i = 0; b != e; ++b, ++i)
+	{
+		assert(*b == 0);
+	}
+	std::cout << "Addition test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -187,6 +211,7 @@ int main() {
 	testVectorCtor();
 	testAssignOp();
 	testAddOp();
+	testSubOp();
 	testFunctorException();
 	return 0;
 }

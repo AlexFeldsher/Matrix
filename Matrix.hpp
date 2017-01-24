@@ -118,6 +118,13 @@ public:
 	Matrix<T> operator+(const Matrix<T>& rhs);
 
 	/**
+	 * @brief Binary subtraction operator
+	 * @param rhs the matrix to subtract from this
+	 * @return A matrix that equals (this - rhs)
+	 */
+	Matrix<T> operator-(const Matrix<T>& rhs);
+
+	/**
 	 * @brief returns the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
@@ -230,6 +237,31 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs)
 	return newMatrix;
 }
 
+/**
+ * @brief Binary subtraction operator
+ * @param rhs the matrix to subtract from this
+ * @return A matrix that equals (this - rhs)
+ */
+template <typename T>
+Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs)
+{
+	// TODO: add size comparison and throw and exception
+	// TODO: maybe make a single function for addition and subtraction
+	Matrix<T>::iterator rhsBegin = rhs.begin();
+	Matrix<T>::iterator rhsEnd = rhs.end();
+	Matrix<T>::iterator thisBegin = begin();
+
+	std::vector<T> newMatrixVec(_cols * _rows);
+
+	int i;
+	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
+	{
+		newMatrixVec[i] = *rhsBegin - *thisBegin;
+	}
+
+	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
+	return newMatrix;
+}
 
 /**
  * @brief returns the element in the given matrix position
