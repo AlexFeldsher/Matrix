@@ -137,6 +137,30 @@ void testAssignOp()
 	std::cout << "All elements assigned correctly" << std::endl;
 }
 
+void testAddOp()
+{
+	std::cout << "========ADDITION OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 10000; ++i)
+	{
+		vec.push_back(i);
+	}
+
+	Matrix<int> matrix1(100, 100, vec);
+	Matrix<int> matrix2(100, 100, vec);
+	Matrix<int> matrix;
+	matrix = matrix1 + matrix2;
+
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	for (i = 0; b != e; ++b, ++i)
+	{
+		assert(*b == (vec[i] * 2));
+	}
+	std::cout << "Addition test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -162,6 +186,7 @@ int main() {
 	testMoveCtor();
 	testVectorCtor();
 	testAssignOp();
+	testAddOp();
 	testFunctorException();
 	return 0;
 }

@@ -111,6 +111,13 @@ public:
 	Matrix<T>& operator=(const Matrix<T>& rhs);
 
 	/**
+	 * @brief Binary addition operator
+	 * @param rhs the matrix to add to this
+	 * @return A matrix that equals (this + rhs)
+	 */
+	Matrix<T> operator+(const Matrix<T>& rhs);
+
+	/**
 	 * @brief returns the element in the given matrix position
 	 * @param row the row number
 	 * @param col the column number
@@ -168,117 +175,7 @@ private:
 		return (row*_cols + col);
 	}
 
-	/**
-	 * @brief bidirectional const iterator class
-	 */
-	class _BidiConstIterator : public std::iterator<std::bidirectional_iterator_tag, T, std::ptrdiff_t, T*, T&>
-	{
-		const T* _ptr;
-	public:
-		/**
-		 * @brief Bidirectional iterator constructor
-		 * @param ptr the element the iterator should point to
-		 */
-		_BidiConstIterator(const T* ptr) : _ptr(ptr) {};
 
-		/**
-		 * @brief Iterator constructor
-		 * @param iterator to copy
-		 */
-		_BidiConstIterator(const _BidiConstIterator& other) : _ptr(other._ptr) {};
-
-		/**
-		 * @brief Destructor
-		 */
-		~_BidiConstIterator() {};
-
-		/**
-		 * @brief assign operator
-		 * @param rhs the object to assign to this one
-		 * @return this
-		 */
-		_BidiConstIterator& operator=(const _BidiConstIterator& rhs)
-		{
-			_ptr = rhs._ptr;
-			return *this;
-		}
-
-		/**
-		 * @brief equals operator
-		 * @param rhs the object to test this against
-		 * @return true if rhs equals this, otherwise false
-		 */
-		bool operator==(const _BidiConstIterator& rhs) const
-		{
-			return (_ptr == rhs._ptr);
-		}
-
-		/**
-		 * @brief not-equals operator
-		 * @param rhs the object to test this against
-		 * @return true if rhs doesn't equal this, otherwise false
-		 */
-		bool operator!=(const _BidiConstIterator& rhs) const
-		{
-			return !(*this == rhs);
-		}
-
-		/**
-		 * @brief accesses the contained value
-		 * @return the contained value
-		 */
-		const T& operator*() const
-		{
-			return *_ptr;
-		}
-
-		/**
-		 * @bried accesses the contained value
-		 * @return the contained value
-		 */
-		const T* operator->() const
-		{
-			return _ptr;
-		}
-
-		/**
-		 * @brief pre increment the operator
-		 * @return the element the iterator points to after incrementing it
-		 */
-		const T& operator++()
-		{
-			return *(++_ptr);
-		}
-
-		/**
-		 * @brief post increment the operator
-		 * @return the element the iterator pointed to before incrementing it
-		 */
-		const T& operator++(int i)
-		{
-			const T* tmp = _ptr++;
-			return *tmp;
-		}
-
-		/**
-		 * @brief pre increment the operator
-		 * @return the element the iterator points to after incrementing it
-		 */
-		const T& operator--()
-		{
-			return *(--_ptr);
-		}
-
-		/**
-		 * @brief post increment the operator
-		 * @return the element the iterator pointed to before incrementing it
-		 */
-		const T& operator--(int i)
-		{
-			const T* tmp = _ptr--;
-			return *tmp;
-		}
-	};
 };
 
 /**
@@ -307,6 +204,32 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
 
 	return *this;
 }
+
+/**
+ * @brief Binary addition operator
+ * @param rhs the matrix to add to this
+ * @return A matrix that equals (this + rhs)
+ */
+template <typename T>
+Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs)
+{
+	// TODO: add size comparison and throw and exception
+	Matrix<T>::iterator rhsBegin = rhs.begin();
+	Matrix<T>::iterator rhsEnd = rhs.end();
+	Matrix<T>::iterator thisBegin = begin();
+
+	std::vector<T> newMatrixVec(_cols * _rows);
+
+	int i;
+	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
+	{
+		newMatrixVec[i] = *rhsBegin + *thisBegin;
+	}
+
+	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
+	return newMatrix;
+}
+
 
 /**
  * @brief returns the element in the given matrix position
@@ -346,6 +269,119 @@ unsigned int Matrix<T>::rows() const
 	return _rows;
 }
 
-//-------------------------- Iterator methods ---------------------------
+//-------------------------- Iterator class implementation ---------------------------
+
+/**
+ * @brief bidirectional const iterator class
+ */
+template<class T>
+class Matrix<T>::_BidiConstIterator : public std::iterator<std::bidirectional_iterator_tag, T, std::ptrdiff_t, T*, T&>
+{
+	const T* _ptr;
+public:
+	/**
+	 * @brief Bidirectional iterator constructor
+	 * @param ptr the element the iterator should point to
+	 */
+	_BidiConstIterator(const T* ptr) : _ptr(ptr) {};
+
+	/**
+	 * @brief Iterator constructor
+	 * @param iterator to copy
+	 */
+	_BidiConstIterator(const _BidiConstIterator& other) : _ptr(other._ptr) {};
+
+	/**
+	 * @brief Destructor
+	 */
+	~_BidiConstIterator() {};
+
+	/**
+	 * @brief assign operator
+	 * @param rhs the object to assign to this one
+	 * @return this
+	 */
+	_BidiConstIterator& operator=(const _BidiConstIterator& rhs)
+	{
+		_ptr = rhs._ptr;
+		return *this;
+	}
+
+	/**
+	 * @brief equals operator
+	 * @param rhs the object to test this against
+	 * @return true if rhs equals this, otherwise false
+	 */
+	bool operator==(const _BidiConstIterator& rhs) const
+	{
+		return (_ptr == rhs._ptr);
+	}
+
+	/**
+	 * @brief not-equals operator
+	 * @param rhs the object to test this against
+	 * @return true if rhs doesn't equal this, otherwise false
+	 */
+	bool operator!=(const _BidiConstIterator& rhs) const
+	{
+		return !(*this == rhs);
+	}
+
+	/**
+	 * @brief accesses the contained value
+	 * @return the contained value
+	 */
+	const T& operator*() const
+	{
+		return *_ptr;
+	}
+
+	/**
+	 * @bried accesses the contained value
+	 * @return the contained value
+	 */
+	const T* operator->() const
+	{
+		return _ptr;
+	}
+
+	/**
+	 * @brief pre increment the operator
+	 * @return the element the iterator points to after incrementing it
+	 */
+	const T& operator++()
+	{
+		return *(++_ptr);
+	}
+
+	/**
+	 * @brief post increment the operator
+	 * @return the element the iterator pointed to before incrementing it
+	 */
+	const T& operator++(int i)
+	{
+		const T* tmp = _ptr++;
+		return *tmp;
+	}
+
+	/**
+	 * @brief pre increment the operator
+	 * @return the element the iterator points to after incrementing it
+	 */
+	const T& operator--()
+	{
+		return *(--_ptr);
+	}
+
+	/**
+	 * @brief post increment the operator
+	 * @return the element the iterator pointed to before incrementing it
+	 */
+	const T& operator--(int i)
+	{
+		const T* tmp = _ptr--;
+		return *tmp;
+	}
+};
 
 #endif //MATRIX_MATRIX_HPP
