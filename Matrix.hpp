@@ -2,7 +2,6 @@
 #define MATRIX_MATRIX_HPP
 
 #include <iostream>
-#include <iterator>
 #include <vector>
 #include <stdexcept>	// std::out_of_range
 #include "Complex.h"
@@ -79,29 +78,29 @@ class Matrix
 	/**
 	 * @brief bidirectional iterator class declaration
 	 */
-	class _BidiConstIterator;
+	class BidiConstIterator;
 
 	/**
 	 * @brief vector of type T, represents a matrix.
 	 */
-	std::vector<T> _matrix;
+	std::vector<T> matrix;
 
 	/**
 	 * @brief the number of columns in the matrix;
 	 */
-	unsigned int _cols;
+	unsigned int nCols;
 
 	/**
 	 * @brief the number of rows in the matrix;
 	 */
-	unsigned int _rows;
+	unsigned int nRows;
 
 public:
 
 	/**
 	 * @brief iterator type definition
 	 */
-	typedef _BidiConstIterator const_iterator;
+	typedef BidiConstIterator const_iterator;
 
 	/**
 	 * @brief default constructor
@@ -120,13 +119,13 @@ public:
 	 * @brief Matrix copy constructor
 	 * @param other the matrix to copy
 	 */
-	Matrix(const Matrix<T>& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
+	Matrix(const Matrix<T>& other) : matrix(other.matrix), nCols(other.nCols), nRows(other.nRows) {};
 
 	/**
 	 * @brief Matrix move constructor
 	 * @param other the matrix to copy
 	 */
-	Matrix(const Matrix<T>&& other) : _matrix(other._matrix), _cols(other._cols), _rows(other._rows) {};
+	Matrix(const Matrix<T> && other) : matrix(other.matrix), nCols(other.nCols), nRows(other.nRows) {};
 
 	/**
 	 * @brief Constructs a matrix from a given vector and row and column numbers
@@ -195,7 +194,7 @@ public:
 	 */
 	bool isSquareMatrix() const
 	{
-		return (_cols == _rows);
+		return (nCols == nRows);
 	}
 
 	/**
@@ -229,7 +228,7 @@ public:
 	 */
 	const_iterator begin() const
 	{
-		return const_iterator(&(_matrix.front()));
+		return const_iterator(&(matrix.front()));
 	}
 
 	/**
@@ -238,7 +237,7 @@ public:
 	 */
 	const_iterator end() const
 	{
-		return const_iterator(&(_matrix.back()) + 1);
+		return const_iterator(&(matrix.back()) + 1);
 	}
 
 	/**
@@ -264,7 +263,7 @@ private:
 	 */
 	unsigned int _getIndex(unsigned int row, unsigned int col) const
 	{
-		return (row*_cols + col);
+		return (row*nCols + col);
 	}
 
 
@@ -275,11 +274,11 @@ private:
  * initializes a matrix of size 1x1 with a single element 0
  */
 template <typename T>
-Matrix<T>::Matrix() : _cols(DEFAULT_CTOR_COLS), _rows(DEFAULT_CTOR_ROWS)
+Matrix<T>::Matrix() : nCols(DEFAULT_CTOR_COLS), nRows(DEFAULT_CTOR_ROWS)
 {
 	/* initialize a new vector with a single element 0 */
-	std::vector<T> zero(_cols, DEFAULT_CTOR_ELEM);
-	_matrix = zero;
+	std::vector<T> zero(nCols, DEFAULT_CTOR_ELEM);
+	matrix = zero;
 }
 /**
  * @brief Matrix constructor, creates a matrix with the given row and column sizes initialized to zeroes
@@ -293,11 +292,11 @@ Matrix<T>::Matrix(unsigned int rows, unsigned int cols)
 	{
 		throw std::invalid_argument(ROWS_COLS_CTOR_EXCEPTION_MSG);
 	}
-	_rows = rows;
-	_cols = cols;
+	nRows = rows;
+	nCols = cols;
 
 	std::vector<T> vec(rows * cols);
-	_matrix = vec;
+	matrix = vec;
 }
 
 /**
@@ -314,9 +313,9 @@ Matrix<T>::Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& ce
 	{
 		throw std::invalid_argument(CELLS_CTOR_EXCEPTION_MSG);
 	}
-	_cols = cols;
-	_rows = rows;
-	_matrix = cells;
+	nCols = cols;
+	nRows = rows;
+	matrix = cells;
 }
 
 
@@ -328,9 +327,9 @@ Matrix<T>::Matrix(unsigned int rows, unsigned int cols, const std::vector<T>& ce
 template <typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
 {
-	_matrix = rhs._matrix;
-	_cols = rhs._cols;
-	_rows = rhs._rows;
+	matrix = rhs.matrix;
+	nCols = rhs.nCols;
+	nRows = rhs.nRows;
 
 	return *this;
 }
@@ -361,7 +360,7 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) const
 		newMatrixVec[i] = *thisBegin + *rhsBegin;
 	}
 
-	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
+	Matrix<T> newMatrix(nRows, nCols, newMatrixVec);
 	return newMatrix;
 }
 
@@ -382,7 +381,7 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 	const_iterator rhsEnd = rhs.end();
 	const_iterator thisBegin = begin();
 
-	std::vector<T> newMatrixVec(_cols * _rows);
+	std::vector<T> newMatrixVec(nCols * nRows);
 
 	int i;
 	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
@@ -390,7 +389,7 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 		newMatrixVec[i] = *thisBegin - *rhsBegin;
 	}
 
-	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
+	Matrix<T> newMatrix(nRows, nCols, newMatrixVec);
 	return newMatrix;
 }
 
@@ -403,18 +402,18 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 template <typename T>
 Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) const
 {
-	Matrix<T> result(_rows, rhs._cols);
+	Matrix<T> result(nRows, rhs.nCols);
 	if (cols() != rhs.rows())
 	{
 		throw std::invalid_argument(MULTIPLICATION_EXCEPTION_MSG);
 	}
 	unsigned int i, j, k;
-	for (i = 0; i < _rows; ++i)
+	for (i = 0; i < nRows; ++i)
 	{
-		for (j = 0; j < rhs._cols; ++j)
+		for (j = 0; j < rhs.nCols; ++j)
 		{
 			T sum = 0;
-			for (k = 0; k < _cols; ++k)
+			for (k = 0; k < nCols; ++k)
 			{
 				sum = sum + ((*this)(i, k) * rhs(k, j));
 			}
@@ -432,7 +431,7 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) const
 template <typename T>
 bool Matrix<T>::operator==(const Matrix<T>& rhs) const
 {
-	if (_cols != rhs._cols || _rows != rhs._rows)
+	if (nCols != rhs.nCols || nRows != rhs.nRows)
 	{
 		return false;
 	}
@@ -476,11 +475,11 @@ Matrix<T> Matrix<T>::trans() const
 	}
 
 	unsigned int i, j;
-	Matrix<T> transMatrix(_rows, _cols);
+	Matrix<T> transMatrix(nRows, nCols);
 
-	for (i = 0; i < _rows; ++i)
+	for (i = 0; i < nRows; ++i)
 	{
-		for (j = 0; j < _cols; ++j)
+		for (j = 0; j < nCols; ++j)
 		{
 			transMatrix(j, i) = (*this)(i, j);
 		}
@@ -503,13 +502,13 @@ Matrix<Complex> Matrix<Complex>::trans() const
 	}
 
 	unsigned int i, j;
-	Matrix<Complex> transMatrix(_rows, _cols);
+	Matrix<Complex> transMatrix(nRows, nCols);
 
-	for (i = 0; i < _rows; ++i)
+	for (i = 0; i < nRows; ++i)
 	{
-		for (j = 0; j < _cols; ++j)
+		for (j = 0; j < nCols; ++j)
 		{
-			transMatrix(j, i) = _matrix[_getIndex(i, j)].conj();
+			transMatrix(j, i) = matrix[_getIndex(i, j)].conj();
 		}
 	}
 
@@ -548,13 +547,13 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
 template <typename T>
 const T& Matrix<T>::operator()(unsigned int row, unsigned int col) const
 {
-	if (row >= _rows || row < MIN_MATRIX_INDEX || col >= _cols || col < MIN_MATRIX_INDEX)
+	if (row >= nRows || row < MIN_MATRIX_INDEX || col >= nCols || col < MIN_MATRIX_INDEX)
 	{
 		throw std::out_of_range(OUT_OF_RANGE_MSG);
 	}
 
 	/* matrix indexes start at 1, but vector indexes start at 0 */
-	return _matrix[_getIndex(row, col)];
+	return matrix[_getIndex(row, col)];
 }
 
 /**
@@ -567,13 +566,13 @@ template <typename T>
 T& Matrix<T>::operator()(unsigned int row, unsigned int col)
 {
 	// TODO: maybe make a single function for const and non const
-	if (row >= _rows || row < MIN_MATRIX_INDEX || col >= _cols || col < MIN_MATRIX_INDEX)
+	if (row >= nRows || row < MIN_MATRIX_INDEX || col >= nCols || col < MIN_MATRIX_INDEX)
 	{
 		throw std::out_of_range(OUT_OF_RANGE_MSG);
 	}
 
 	/* matrix indexes start at 1, but vector indexes start at 0 */
-	return _matrix[_getIndex(row, col)];
+	return matrix[_getIndex(row, col)];
 }
 
 
@@ -584,7 +583,7 @@ T& Matrix<T>::operator()(unsigned int row, unsigned int col)
 template <typename T>
 unsigned int Matrix<T>::cols() const
 {
-	return _cols;
+	return nCols;
 }
 
 /**
@@ -594,7 +593,7 @@ unsigned int Matrix<T>::cols() const
 template <typename T>
 unsigned int Matrix<T>::rows() const
 {
-	return _rows;
+	return nRows;
 }
 
 //-------------------------- Iterator class implementation ---------------------------
@@ -603,7 +602,7 @@ unsigned int Matrix<T>::rows() const
  * @brief bidirectional const iterator class
  */
 template<class T>
-class Matrix<T>::_BidiConstIterator : public std::iterator<std::bidirectional_iterator_tag, T, std::ptrdiff_t, T*, T&>
+class Matrix<T>::BidiConstIterator
 {
 	/**
 	 * @brief pointer to the element
@@ -616,30 +615,30 @@ public:
 	 * @brief default constructor
 	 * initialized the pointer to nullptr
 	 */
-	_BidiConstIterator() : _ptr(nullptr) {};
+	BidiConstIterator() : _ptr(nullptr) {};
 	/**
 	 * @brief Bidirectional iterator constructor
 	 * @param ptr the element the iterator should point to
 	 */
-	_BidiConstIterator(const T* ptr) : _ptr(ptr) {};
+	BidiConstIterator(const T* ptr) : _ptr(ptr) {};
 
 	/**
 	 * @brief Iterator constructor
 	 * @param iterator to copy
 	 */
-	_BidiConstIterator(const _BidiConstIterator& other) : _ptr(other._ptr) {};
+	BidiConstIterator(const BidiConstIterator& other) : _ptr(other._ptr) {};
 
 	/**
 	 * @brief Destructor
 	 */
-	~_BidiConstIterator() {};
+	~BidiConstIterator() {};
 
 	/**
 	 * @brief assign operator
 	 * @param rhs the object to assign to this one
 	 * @return this
 	 */
-	_BidiConstIterator& operator=(const _BidiConstIterator& rhs)
+	BidiConstIterator& operator=(const BidiConstIterator& rhs)
 	{
 		_ptr = rhs._ptr;
 		return *this;
@@ -650,7 +649,7 @@ public:
 	 * @param rhs the object to test this against
 	 * @return true if rhs equals this, otherwise false
 	 */
-	bool operator==(const _BidiConstIterator& rhs) const
+	bool operator==(const BidiConstIterator& rhs) const
 	{
 		return (_ptr == rhs._ptr);
 	}
@@ -660,7 +659,7 @@ public:
 	 * @param rhs the object to test this against
 	 * @return true if rhs doesn't equal this, otherwise false
 	 */
-	bool operator!=(const _BidiConstIterator& rhs) const
+	bool operator!=(const BidiConstIterator& rhs) const
 	{
 		return !(*this == rhs);
 	}
