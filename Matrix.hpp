@@ -115,14 +115,29 @@ public:
 	 * @param rhs the matrix to add to this
 	 * @return A matrix that equals (this + rhs)
 	 */
-	Matrix<T> operator+(const Matrix<T>& rhs);
+	Matrix<T> operator+(const Matrix<T>& rhs) const;
 
 	/**
 	 * @brief Binary subtraction operator
 	 * @param rhs the matrix to subtract from this
 	 * @return A matrix that equals (this - rhs)
 	 */
-	Matrix<T> operator-(const Matrix<T>& rhs);
+	Matrix<T> operator-(const Matrix<T>& rhs) const;
+
+	/**
+	 * @brief Matrix multiplication operator
+	 * @param rhs the matrix to multiply with this
+	 * @return A matrix that equals (this * rhs)
+	 */
+	Matrix<T> operator*(const Matrix<T>& rhs) const;
+
+	/**
+	 * @brief returns a constant of the element in the given matrix position
+	 * @param row the row number
+	 * @param col the column number
+	 * @return the element in the given row and column number
+	 */
+	const T& operator()(unsigned int row, unsigned int col) const;
 
 	/**
 	 * @brief returns the element in the given matrix position
@@ -130,7 +145,8 @@ public:
 	 * @param col the column number
 	 * @return the element in the given row and column number
 	 */
-	const T& operator()(unsigned int row, unsigned int col) const;
+	T& operator()(unsigned int row, unsigned int col);
+
 
 	/**
 	 * @brief Returns the iterator to the first element of the matrix
@@ -218,7 +234,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
  * @return A matrix that equals (this + rhs)
  */
 template <typename T>
-Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs)
+Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) const
 {
 	// TODO: add size comparison and throw and exception
 	Matrix<T>::iterator rhsBegin = rhs.begin();
@@ -230,7 +246,7 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs)
 	int i;
 	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
 	{
-		newMatrixVec[i] = *rhsBegin + *thisBegin;
+		newMatrixVec[i] = *thisBegin + *rhsBegin;
 	}
 
 	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
@@ -243,7 +259,7 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs)
  * @return A matrix that equals (this - rhs)
  */
 template <typename T>
-Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs)
+Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) const
 {
 	// TODO: add size comparison and throw and exception
 	// TODO: maybe make a single function for addition and subtraction
@@ -256,11 +272,39 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs)
 	int i;
 	for (i = 0; rhsBegin != rhsEnd; ++rhsBegin, ++thisBegin, ++i)
 	{
-		newMatrixVec[i] = *rhsBegin - *thisBegin;
+		newMatrixVec[i] = *thisBegin - *rhsBegin;
 	}
 
 	Matrix<T> newMatrix(_rows, _cols, newMatrixVec);
 	return newMatrix;
+}
+
+/**
+ * @brief Matrix multiplication operator
+ * Using the iterative algorithm
+ * @param rhs the matrix to multiply with this
+ * @return A matrix that equals (this * rhs)
+ */
+template <typename T>
+Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) const
+{
+	Matrix<T> result(_rows, rhs._cols);
+	// TODO: add matrix size verification
+	// this nxm, rhs mxp
+	unsigned int i, j, k;
+	for (i = 0; i < _rows; ++i)
+	{
+		for (j = 0; j < rhs._cols; ++j)
+		{
+			T sum = 0;
+			for (k = 0; k < _cols; ++k)
+			{
+				sum = sum + ((*this)(i, k) * rhs(k, j));
+			}
+			result(i, j) = sum;
+		}
+	}
+	return result;
 }
 
 /**
@@ -280,6 +324,26 @@ const T& Matrix<T>::operator()(unsigned int row, unsigned int col) const
 	/* matrix indexes start at 1, but vector indexes start at 0 */
 	return _matrix[_getIndex(row, col)];
 }
+
+/**
+ * @brief returns the element in the given matrix position
+ * @param row the row number
+ * @param col the column number
+ * @return the element in the given row and column number
+ */
+template <typename T>
+T& Matrix<T>::operator()(unsigned int row, unsigned int col)
+{
+	// TODO: maybe make a single function for const and non const
+	if (row >= _rows || row < MIN_MATRIX_INDEX || col >= _cols || col < MIN_MATRIX_INDEX)
+	{
+		throw std::out_of_range(OUT_OF_RANGE_MSG);
+	}
+
+	/* matrix indexes start at 1, but vector indexes start at 0 */
+	return _matrix[_getIndex(row, col)];
+}
+
 
 /**
  * @brief returns the number of columns in the matrix

@@ -185,6 +185,30 @@ void testSubOp()
 	std::cout << "Addition test passed" << std::endl;
 }
 
+void testMultOp()
+{
+	std::cout << "========MULTIPLICATION OPERATOR TEST========" << std::endl;
+	std::vector<int> vec;
+	int i;
+	for (i = 0; i < 1000; ++i)
+	{
+		vec.push_back(1);
+	}
+
+	Matrix<int> matrix1(10, 100, vec);
+	Matrix<int> matrix2(100, 10, vec);
+	Matrix<int> matrix;
+	matrix = matrix1 * matrix2;
+
+	Matrix<int>::iterator b = matrix.begin();
+	Matrix<int>::iterator e = matrix.end();
+	for (i = 0; b != e; ++b, ++i)
+	{
+		assert(*b == 100);
+	}
+	std::cout << "Multiplication test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -212,6 +236,7 @@ int main() {
 	testAssignOp();
 	testAddOp();
 	testSubOp();
+	testMultOp();
 	testFunctorException();
 	return 0;
 }
