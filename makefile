@@ -5,7 +5,6 @@ test: main.cpp Matrix.hpp
 driver: clean GenericMatrixDriver.o Complex.o
 	g++ -std=c++11 -g -Wall -Wextra -Wvla GenericMatrixDriver.o Complex.o -o test.out
 	./test.out
-	rm -rf test.out
 GenericMatrixDriver.o: GenericMatrixDriver.cpp Matrix.hpp
 	g++ -std=c++11 -g -Wall -Wextra -Wvla -c GenericMatrixDriver.cpp
 Complex.o: Complex.h Complex.cpp
