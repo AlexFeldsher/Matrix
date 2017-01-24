@@ -258,6 +258,16 @@ void testTrans()
 	std::cout << "Transpose test passed" << std::endl;
 }
 
+void testIsSquareMatrix()
+{
+	std::cout << "========ISSQUAREMATRIX TEST========" << std::endl;
+	Matrix<int> matrix1(2, 2);
+	Matrix<int> matrix2(29, 2);
+	assert(matrix1.isSquareMatrix() == true);
+	assert(matrix2.isSquareMatrix() == false);
+	std::cout << "IsSquareMatrix test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -288,6 +298,7 @@ int main() {
 	testEQOp();
 	testNotEQOp();
 	testTrans();
+	testIsSquareMatrix();
 	testFunctorException();
 	return 0;
 }
