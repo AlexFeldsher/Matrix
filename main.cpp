@@ -245,6 +245,19 @@ void testNotEQOp()
 	std::cout << "Not equal test passed" << std::endl;
 }
 
+void testTrans()
+{
+	std::cout << "========TRANSPOSE TEST========" << std::endl;
+	std::vector<int> vec = {1,2,3,4};
+	Matrix<int> matrix1(2, 2, vec);
+	Matrix<int> matrix2 = matrix1.trans();
+	assert(matrix2(0,0) == 1);
+	assert(matrix2(0,1) == 3);
+	assert(matrix2(1,0) == 2);
+	assert(matrix2(1,1) == 4);
+	std::cout << "Transpose test passed" << std::endl;
+}
+
 void testFunctorException()
 {
 	std::cout << "========FUNCTOR THROW EXCEPTION TEST========" << std::endl;
@@ -265,7 +278,7 @@ void testFunctorException()
 int main() {
 	testDefaultCtor();
 	testCtorRowCol();
-	testCtorRowCol();
+	testCopyCtor();
 	testMoveCtor();
 	testVectorCtor();
 	testAssignOp();
@@ -274,6 +287,7 @@ int main() {
 	testMultOp();
 	testEQOp();
 	testNotEQOp();
+	testTrans();
 	testFunctorException();
 	return 0;
 }

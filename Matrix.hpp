@@ -32,7 +32,7 @@
  */
 #define MIN_MATRIX_INDEX 0
 
-template<class T>
+template <class T>
 class Matrix
 {
 	/**
@@ -144,6 +144,12 @@ public:
 	 * @return false if all the elements are equal, otherwise true
 	 */
 	bool operator!=(const Matrix<T>& rhs) const;
+
+	/**
+	 * @brief returns the a transpose matrix of this matrix
+	 * @return transpose matrix
+	 */
+	Matrix<T> trans() const;
 
 	/**
 	 * @brief returns a constant of the element in the given matrix position
@@ -360,6 +366,28 @@ bool Matrix<T>::operator!=(const Matrix<T>& rhs) const
 	return !(*this == rhs);
 }
 
+/**
+ * @brief returns the a transpose matrix of this matrix
+ * @return transpose matrix
+ */
+template <typename T>
+Matrix<T> Matrix<T>::trans() const
+{
+	//TODO: throw exception if matrix isn't square
+	unsigned int i, j;
+	Matrix<T> transMatrix(_rows, _cols);
+
+	for (i = 0; i < _rows; ++i)
+	{
+		for (j = 0; j < _cols; ++j)
+		{
+			transMatrix(j, i) = (*this)(i, j);
+		}
+	}
+
+	return transMatrix;
+}
+
 
 /**
  * @brief returns the element in the given matrix position
@@ -427,7 +455,11 @@ unsigned int Matrix<T>::rows() const
 template<class T>
 class Matrix<T>::_BidiConstIterator : public std::iterator<std::bidirectional_iterator_tag, T, std::ptrdiff_t, T*, T&>
 {
+	/**
+	 * @brief pointer to the element
+	 */
 	const T* _ptr;
+
 public:
 	/**
 	 * @brief Bidirectional iterator constructor
